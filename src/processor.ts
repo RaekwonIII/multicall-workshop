@@ -158,18 +158,12 @@ async function saveTransfers(ctx: Context, transfersData: TransferData[]) {
 
   ctx.log.info(`Calling multicall for ${transfersData.length} tokens...`);
 
-  const results = await multicall.tryAggregate(exrr.functions.tokenURI, contractAddress.toLowerCase(), transfersData.map(data => [BigNumber.from(data.token)] as BigNumber[]), 100);
+  const results = await multicall.aggregate(exrr.functions.tokenURI, contractAddress.toLowerCase(), transfersData.map(data => [BigNumber.from(data.token)] as BigNumber[]), 100);
 
   results.forEach((res, i) => {
     let t = tokens.get(transfersData[i].token.toString());
     if (t) {
-      let uri = '';
-      if (res.success) {
-        uri = <string>res.value;
-      } else if (res.returnData) {
-        uri = <string>exrr.functions.tokenURI.tryDecodeResult(res.returnData) || '';
-      }
-      t.uri = uri;
+      t.uri = res;
     }
   })
   ctx.log.info(`Done`);
