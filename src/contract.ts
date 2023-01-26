@@ -3,7 +3,7 @@ import { Contract as ContractAPI } from "./abi/erc721";
 import { Context } from "./processor";
 import { BigNumber } from "ethers";
 
-export const contractAddress = "0xd59fC6Bfd9732AB19b03664a45dC29B8421BDA9a";
+export const contractAddress = "0x8b5d62f396Ca3C6cF19803234685e693733f9779";
 export const MULTICALL_CONTRACT = "0x74C3c5Ebcc6DBc313e305C6d50e51092305c1e4a";
 
 async function createContractEntity(ctx: Context): Promise<Contract> {

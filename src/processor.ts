@@ -158,24 +158,28 @@ async function saveTransfers(ctx: Context, transfersData: TransferData[]) {
 
   const multicall = new Multicall(ctx, {height: maxHeight, hash: maxHash}, MULTICALL_CONTRACT);
 
-  ctx.log.info(`Calling multicall for ${transfersData.length} tokens... at block height ${maxHeight},  ${maxHash}`);
 
-  const results = await multicall.aggregate(erc721.functions.tokenURI, transfersData.map(data => [contractAddress, [BigNumber.from(data.token)]] as [string, BigNumber[]]), 100);
+  try {
+    ctx.log.info(`Calling multicall for ${transfersData.length} tokens...`);
+    // ctx.log.info(`Calling multicall for ${transfersData.length} tokens... at block height ${maxHeight},  ${maxHash}`);
+    const results = await multicall.aggregate(erc721.functions.tokenURI, transfersData.map(data => [contractAddress, [BigNumber.from(data.token)]] as [string, BigNumber[]]), 100);
 
-  // results.forEach((res, i) => {
-  //   let t = tokens.get(transfersData[i].token.toString());
-  //   if (t) {
-  //     let uri = '';
-  //     if (res.success) {
-  //       uri = <string>res.value;
-  //     } else if (res.returnData) {
-  //       uri = <string>erc721.functions.tokenURI.tryDecodeResult(res.returnData) || '';
-  //     }
-  //     t.uri = uri;
-  //   }
-  // })
-  // ctx.log.info(`Done`);
-
+    // results.forEach((res, i) => {
+    //   let t = tokens.get(transfersData[i].token.toString());
+    //   if (t) {
+    //     let uri = '';
+    //     if (res.success) {
+    //       uri = <string>res.value;
+    //     } else if (res.returnData) {
+    //       uri = <string>erc721.functions.tokenURI.tryDecodeResult(res.returnData) || '';
+    //     }
+    //     t.uri = uri;
+    //   }
+    // })
+    // ctx.log.info(`Done`);
+  } catch (error) {
+    ctx.log.warn(`Error while using multicall contract: ${error}`);
+  }
   await ctx.store.save([...owners.values()]);
   await ctx.store.save([...tokens.values()]);
   await ctx.store.save([...transfers]);
