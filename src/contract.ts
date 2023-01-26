@@ -1,12 +1,10 @@
-import { Store } from "@subsquid/typeorm-store";
 import { Contract } from "./model";
-import { Contract as ContractAPI } from "./abi/exrr";
+import { Contract as ContractAPI } from "./abi/erc721";
 import { Context } from "./processor";
 import { BigNumber } from "ethers";
 
-export const contractAddress = "0x104b904e19fBDa76bb864731A2C9E01E6b41f855";
-// https://docs.moonbeam.network/builders/build/canonical-contracts/
-export const MULTICALL_CONTRACT = "0x83e3b61886770de2F64AAcaD2724ED4f08F7f36B";
+export const contractAddress = "0xd59fC6Bfd9732AB19b03664a45dC29B8421BDA9a";
+export const MULTICALL_CONTRACT = "0x74C3c5Ebcc6DBc313e305C6d50e51092305c1e4a";
 
 async function createContractEntity(ctx: Context): Promise<Contract> {
   ctx.blocks[ctx.blocks.length -1]
@@ -20,7 +18,7 @@ async function createContractEntity(ctx: Context): Promise<Contract> {
     totalSupply = await contractAPI.totalSupply();
   } catch (error) {
     ctx.log.warn(
-      `[API] Error while fetching Contract metadata for address ${contractAddress}`
+      `[API] Error while fetching Contract metadata for address ${contractAddress} using RPC node ${process.env.RPC_ENDPOINT}`
     );
     if (error instanceof Error) {
       ctx.log.warn(`${error.message}`);

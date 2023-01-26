@@ -24,7 +24,7 @@
     },
     "migration": {
       "description": "Generate new migration",
-      "cmd": ["squid-typeorm-migration", "generate"]
+      "cmd": ["squid-typeorm-migration", "apply"]
     },
     "codegen": {
       "description": "Generate models from schema",

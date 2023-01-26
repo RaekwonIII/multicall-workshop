@@ -73,6 +73,7 @@ export interface BlockContext  {
 
 export interface Block  {
     height: number
+    hash: string
 }
 
 
@@ -85,7 +86,7 @@ export interface Chain  {
 
 export class ContractBase {
     private readonly _chain: Chain
-    private readonly blockHeight: number
+    private readonly blockHeight: string
     readonly address: string
 
     constructor(ctx: BlockContext, address: string)
@@ -93,13 +94,13 @@ export class ContractBase {
     constructor(ctx: BlockContext, blockOrAddress: Block | string, address?: string) {
         this._chain = ctx._chain
         if (typeof blockOrAddress === 'string')  {
-            this.blockHeight = ctx.block.height
+            this.blockHeight = ctx.block.hash
             this.address = ethers.utils.getAddress(blockOrAddress)
         } else  {
             if (address == null) {
                 throw new Error('missing contract address')
             }
-            this.blockHeight = blockOrAddress.height
+            this.blockHeight = blockOrAddress.hash
             this.address = ethers.utils.getAddress(address)
         }
     }
@@ -108,7 +109,7 @@ export class ContractBase {
         let data = func.encode(args)
         let result = await this._chain.client.call('eth_call', [
             {to: this.address, data},
-            '0x'+this.blockHeight.toString(16)
+            this.blockHeight//.toString(16)
         ])
         return func.decodeResult(result)
     }
