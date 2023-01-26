@@ -53,7 +53,7 @@ type TransferData = {
   from: string;
   to: string;
   token: ethers.BigNumber;
-  timestamp: bigint;
+  timestamp: Date;
   block: number;
   transactionHash: string;
 };
@@ -70,7 +70,7 @@ function handleTransfer(
     token: tokenId,
     from,
     to,
-    timestamp: BigInt(block.timestamp),
+    timestamp: new Date(block.timestamp),
     block: block.height,
     transactionHash: event.evmTxHash,
   };
